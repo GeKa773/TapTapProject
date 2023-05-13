@@ -10,7 +10,8 @@ data class GameUiState(
     val timer: String = "00:00",
     val tapTapButtons: List<TapTapData> = emptyList(),
     val isPause: Boolean = false,
-    val pauseTimer: String = ""
+    val pauseTimer: String = "",
+    val score: Int = 0
 ) : BaseUiState() {
 
     fun getTapTapData(width: Int, height: Int): TapTapData {

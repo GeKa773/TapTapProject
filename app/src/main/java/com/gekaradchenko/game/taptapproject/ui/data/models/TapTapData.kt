@@ -4,10 +4,12 @@ import androidx.compose.ui.graphics.Color
 
 data class TapTapData(
     val id: Pair<Int, Int>,
-    val isActive: Boolean,
+
     val color: Color?,
     val text: TapTapTextData? = null,
-)
+) {
+    var isActive: Boolean = false
+}
 
 data class TapTapTextData(
     val text: String,

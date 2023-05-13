@@ -48,7 +48,7 @@ fun GameScreen(
             .background(color = MaterialTheme.colorScheme.background)
     ) {
 
-        GameToolBar(uiState = uiState)
+        GameToolBar(uiState = uiState, viewModel = viewModel)
         Box(
             modifier = Modifier
                 .fillMaxSize()
@@ -62,7 +62,7 @@ fun GameScreen(
 }
 
 @Composable
-private fun GameToolBar(uiState: GameUiState) {
+private fun GameToolBar(uiState: GameUiState, viewModel: GameViewModel) {
     Row(
         modifier = Modifier
             .fillMaxWidth()
@@ -72,13 +72,19 @@ private fun GameToolBar(uiState: GameUiState) {
         horizontalArrangement = Arrangement.SpaceBetween,
         verticalAlignment = Alignment.CenterVertically
     ) {
-        Icon(
-            painter = painterResource(id = R.drawable.ic_arrow_back),
-            contentDescription = "Back",
-            tint = MaterialTheme.colorScheme.onBackground,
-            modifier = Modifier
-                .padding(6.dp)
-                .clickable { }
+//        Icon(
+//            painter = painterResource(id = R.drawable.ic_arrow_back),
+//            contentDescription = "Back",
+//            tint = MaterialTheme.colorScheme.onBackground,
+//            modifier = Modifier
+//                .padding(6.dp)
+//                .clickable { }
+//        )
+
+        Text(
+            text = uiState.score.toString(),
+            style = MaterialTheme.typography.headlineSmall,
+            color = MaterialTheme.colorScheme.onBackground
         )
 
         Text(
@@ -93,7 +99,7 @@ private fun GameToolBar(uiState: GameUiState) {
             tint = MaterialTheme.colorScheme.onBackground,
             modifier = Modifier
                 .padding(6.dp)
-                .clickable { }
+                .clickable { viewModel.sendUiEvent(GameUiEvent.EventPause) }
         )
     }
 }

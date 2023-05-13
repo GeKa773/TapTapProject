@@ -5,6 +5,11 @@
 //    id("org.jetbrains.kotlin.android") version "1.8.21" apply false
 //}
 
+plugins {
+
+    id("com.google.dagger.hilt.android") version "2.46" apply false
+}
+
 buildscript {
     repositories {
         google()
