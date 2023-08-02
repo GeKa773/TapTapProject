@@ -15,7 +15,6 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
-import androidx.compose.material3.surfaceColorAtElevation
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
@@ -25,10 +24,13 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.navigation.NavController
+import androidx.navigation.compose.rememberNavController
 import com.gekaradchenko.game.taptapproject.R
 import com.gekaradchenko.game.taptapproject.ui.base.TapTapButton
-import com.gekaradchenko.game.taptapproject.ui.data.models.TapTapData
+import com.gekaradchenko.game.taptapproject.ui.data.models.GameSetting
 import com.gekaradchenko.game.taptapproject.ui.screen.game.event.GameUiEvent
 import com.gekaradchenko.game.taptapproject.ui.screen.game.state.GameUiState
 import com.gekaradchenko.game.taptapproject.ui.screen.game.viewmodel.GameViewModel
@@ -37,7 +39,9 @@ import com.gekaradchenko.game.taptapproject.ui.theme.defaultToolBarHeight
 
 @Composable
 fun GameScreen(
-    viewModel: GameViewModel = viewModel()
+    navController: NavController,
+    setting: GameSetting = GameSetting.getDefault(),
+    viewModel: GameViewModel = hiltViewModel()
 ) {
 
     val uiState by viewModel.uiState.collectAsState()
@@ -55,7 +59,7 @@ fun GameScreen(
         ) {
             FieldOfPlay(uiState = uiState, viewModel = viewModel)
             if (uiState.isPause || !uiState.isPlay) {
-                PausePart(uiState = uiState, viewModel = viewModel)
+                PausePart(setting = setting, uiState = uiState, viewModel = viewModel)
             }
         }
     }
@@ -139,12 +143,12 @@ private fun FieldOfPlay(uiState: GameUiState, viewModel: GameViewModel) {
 }
 
 @Composable
-private fun PausePart(uiState: GameUiState, viewModel: GameViewModel) {
+private fun PausePart(setting: GameSetting, uiState: GameUiState, viewModel: GameViewModel) {
     Box(
         modifier = Modifier
             .fillMaxSize()
             .background(color = MaterialTheme.colorScheme.surface.copy(alpha = 0.9f))
-            .clickable { viewModel.sendUiEvent(GameUiEvent.EventPlay) },
+            .clickable { viewModel.sendUiEvent(GameUiEvent.EventPlay(setting)) },
         contentAlignment = Alignment.Center
     ) {
         if (uiState.pauseTimer.isEmpty()) {
@@ -175,7 +179,7 @@ fun GameScreenPreview() {
             modifier = Modifier.fillMaxSize(),
             color = MaterialTheme.colorScheme.background
         ) {
-            GameScreen()
+            GameScreen(rememberNavController())
         }
     }
 }

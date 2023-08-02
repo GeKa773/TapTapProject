@@ -36,6 +36,8 @@ class GameViewModel @Inject constructor(
 
     private var buttonsList: MutableList<TapTapData>? = null
 
+    private var timeTimer = 30
+
 
     init {
         initTimer()
@@ -43,6 +45,15 @@ class GameViewModel @Inject constructor(
 
     override fun sendUiEvent(event: GameUiEvent) {
         when (event) {
+
+            is GameUiEvent.EventSetGameSetting -> {
+                timeTimer = event.setting.timer
+                _uiState.value = uiState.value.copy(
+                    widthCount = event.setting.widthCount,
+                    heightCount = event.setting.heightCount,
+                )
+            }
+
             is GameUiEvent.EventTapTapButton -> {
                 Log.e("TTTTTTT", "EventTapTapButton = ${event.data.id}")
                 if (event.data.id == activeButtonId) count++ else count -= 2
@@ -55,8 +66,8 @@ class GameViewModel @Inject constructor(
 
             is GameUiEvent.EventPlay -> {
                 if (!uiState.value.isPlay) {
-                    startGame()
-                    startTimer()
+                    startGame(width = event.setting.widthCount, height = event.setting.heightCount)
+                    startTimer(event.setting.timer)
                 } else {
                     setPause(false)
                 }
@@ -83,9 +94,9 @@ class GameViewModel @Inject constructor(
         timer.event = TimerEvent()
     }
 
-    private fun startTimer() {
+    private fun startTimer(time: Int) {
         viewModelScope.launch {
-            timer.start(15)
+            timer.start(time)
         }
     }
 

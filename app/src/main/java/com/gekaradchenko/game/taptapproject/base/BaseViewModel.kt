@@ -9,5 +9,5 @@ abstract class BaseViewModel<State : BaseUiState, Event : BaseUiEvent> : ViewMod
     protected abstract val _uiState: MutableStateFlow<State>
 
 
-    abstract fun sendUiEvent(event: GameUiEvent)
+    abstract fun sendUiEvent(event: Event)
 }
