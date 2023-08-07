@@ -11,4 +11,5 @@ sealed class GameUiEvent : BaseUiEvent() {
     object EventPause : GameUiEvent()
     class EventPlay(val setting: GameSetting) : GameUiEvent()
     object EventReset : GameUiEvent()
+    class RestartGame(val setting: GameSetting) : GameUiEvent()
 }

@@ -58,32 +58,4 @@ fun TapTapButtonPreview() {
     )
 }
 
-@Composable
-fun CircleSettingButton(text: String, click: () -> Unit) {
-    Button(
-        modifier = Modifier
-            .size(70.dp),
-        shape = CircleShape,
-        contentPadding = PaddingValues(0.dp),
-        colors = ButtonDefaults.buttonColors(
-            containerColor = MaterialTheme.colorScheme.primary
-        ),
-        onClick = { click.invoke() }) {
-        Row(
-            modifier = Modifier.fillMaxSize(),
-            verticalAlignment = Alignment.CenterVertically,
-            horizontalArrangement = Arrangement.Center
-        ) {
-            Text(text = text, fontSize = 30.sp)
-        }
-    }
-}
 
-@Composable
-fun SettingText(text: String) {
-    Text(text = text, fontSize = 38.sp)
-}
-@Composable
-fun SettingDescriptionText(text: String) {
-    Text(text = text, fontSize = 24.sp)
-}

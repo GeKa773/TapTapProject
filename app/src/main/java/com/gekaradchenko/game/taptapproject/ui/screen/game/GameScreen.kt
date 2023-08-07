@@ -5,12 +5,16 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
+import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
@@ -25,11 +29,13 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
-import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import com.gekaradchenko.game.taptapproject.R
+import com.gekaradchenko.game.taptapproject.ui.base.Text28_OnBackground
+import com.gekaradchenko.game.taptapproject.ui.base.Text24_OnBackground
 import com.gekaradchenko.game.taptapproject.ui.base.TapTapButton
+import com.gekaradchenko.game.taptapproject.ui.base.Text28_OnPrimary
 import com.gekaradchenko.game.taptapproject.ui.data.models.GameSetting
 import com.gekaradchenko.game.taptapproject.ui.screen.game.event.GameUiEvent
 import com.gekaradchenko.game.taptapproject.ui.screen.game.state.GameUiState
@@ -52,7 +58,7 @@ fun GameScreen(
             .background(color = MaterialTheme.colorScheme.background)
     ) {
 
-        GameToolBar(uiState = uiState, viewModel = viewModel)
+        GameToolBar(uiState = uiState, viewModel = viewModel, clickBack = { navController.popBackStack() })
         Box(
             modifier = Modifier
                 .fillMaxSize()
@@ -61,12 +67,15 @@ fun GameScreen(
             if (uiState.isPause || !uiState.isPlay) {
                 PausePart(setting = setting, uiState = uiState, viewModel = viewModel)
             }
+            if (uiState.gameEnd) {
+                RestartGameButton(setting = setting, viewModel = viewModel)
+            }
         }
     }
 }
 
 @Composable
-private fun GameToolBar(uiState: GameUiState, viewModel: GameViewModel) {
+private fun GameToolBar(uiState: GameUiState, viewModel: GameViewModel, clickBack: () -> Unit) {
     Row(
         modifier = Modifier
             .fillMaxWidth()
@@ -76,26 +85,23 @@ private fun GameToolBar(uiState: GameUiState, viewModel: GameViewModel) {
         horizontalArrangement = Arrangement.SpaceBetween,
         verticalAlignment = Alignment.CenterVertically
     ) {
-//        Icon(
-//            painter = painterResource(id = R.drawable.ic_arrow_back),
-//            contentDescription = "Back",
-//            tint = MaterialTheme.colorScheme.onBackground,
-//            modifier = Modifier
-//                .padding(6.dp)
-//                .clickable { }
-//        )
 
-        Text(
-            text = uiState.score.toString(),
-            style = MaterialTheme.typography.headlineSmall,
-            color = MaterialTheme.colorScheme.onBackground
-        )
+        Box(modifier = Modifier.width(40.dp)) {
 
-        Text(
-            text = uiState.timer,
-            style = MaterialTheme.typography.headlineMedium,
-            color = MaterialTheme.colorScheme.onBackground
-        )
+            if (uiState.gameEnd || uiState.isPause) {
+                Icon(
+                    painter = painterResource(id = R.drawable.ic_arrow_back),
+                    contentDescription = "Back",
+                    tint = MaterialTheme.colorScheme.onBackground,
+                    modifier = Modifier
+                        .padding(0.dp)
+                        .clickable { clickBack.invoke() }
+                )
+            } else {
+                Text24_OnBackground(text = uiState.score.toString())
+            }
+        }
+        Text28_OnBackground(text = uiState.timer)
 
         Icon(
             painter = painterResource(id = R.drawable.ic_pause),
@@ -166,6 +172,35 @@ private fun PausePart(setting: GameSetting, uiState: GameUiState, viewModel: Gam
                 color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.5f),
                 fontSize = 160.sp
             )
+        }
+    }
+}
+
+@Composable
+fun RestartGameButton(setting: GameSetting, viewModel: GameViewModel) {
+    Box(modifier = Modifier.fillMaxSize()) {
+        Button(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(horizontal = 20.dp, vertical = 0.dp)
+                .padding(bottom = 30.dp)
+                .height(50.dp)
+                .align(Alignment.BottomCenter),
+            onClick = {
+                viewModel.sendUiEvent(GameUiEvent.RestartGame(setting = setting))
+            },
+            contentPadding = PaddingValues(0.dp),
+            colors = ButtonDefaults.buttonColors(
+                containerColor = MaterialTheme.colorScheme.primary
+            )
+        ) {
+            Row(
+                modifier = Modifier.fillMaxSize(),
+                horizontalArrangement = Arrangement.Center,
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                Text28_OnPrimary(text = "Restart")
+            }
         }
     }
 }

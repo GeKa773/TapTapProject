@@ -27,13 +27,9 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
-import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
-import com.gekaradchenko.game.taptapproject.ui.base.CircleSettingButton
-import com.gekaradchenko.game.taptapproject.ui.base.SettingDescriptionText
-import com.gekaradchenko.game.taptapproject.ui.base.SettingText
-import com.gekaradchenko.game.taptapproject.ui.base.TapTapButtonPreview
+import com.gekaradchenko.game.taptapproject.ui.base.*
 import com.gekaradchenko.game.taptapproject.ui.screen.Screens
 import com.gekaradchenko.game.taptapproject.ui.screen.start.event.StartUiEvent
 import com.gekaradchenko.game.taptapproject.ui.screen.start.state.StartUiState
@@ -145,14 +141,14 @@ fun StartSettingButtonsModule(value: String, description: String, plus: () -> Un
             click = { plus.invoke() }
         )
 
-        SettingText(text = value)
+        Text36_OnBackground(text = value)
 
         CircleSettingButton(
             text = "-",
             click = { minus.invoke() }
         )
 
-        SettingDescriptionText(text = description)
+        Text24_OnBackground(text = description)
     }
 }
 
@@ -164,21 +160,21 @@ fun StartButton(viewModel: StartViewModel, click: () -> Unit) {
             .fillMaxWidth()
             .padding(horizontal = 20.dp, vertical = 0.dp)
             .height(50.dp),
-        contentPadding = PaddingValues(0.dp),
-        colors = ButtonDefaults.buttonColors(
-            containerColor = MaterialTheme.colorScheme.primary
-        ),
         onClick = {
             click.invoke()
             viewModel.sendUiEvent(StartUiEvent.EventStart)
-        }
+        },
+        contentPadding = PaddingValues(0.dp),
+        colors = ButtonDefaults.buttonColors(
+            containerColor = MaterialTheme.colorScheme.primary
+        )
     ) {
         Row(
             modifier = Modifier.fillMaxSize(),
             horizontalArrangement = Arrangement.Center,
             verticalAlignment = Alignment.CenterVertically
         ) {
-            Text(text = "Start", fontSize = 30.sp)
+            Text28_OnPrimary(text = "Start")
         }
     }
 }

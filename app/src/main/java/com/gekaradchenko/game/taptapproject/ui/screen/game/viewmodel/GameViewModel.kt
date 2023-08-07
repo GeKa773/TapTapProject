@@ -65,15 +65,22 @@ class GameViewModel @Inject constructor(
             }
 
             is GameUiEvent.EventPlay -> {
-                if (!uiState.value.isPlay) {
-                    startGame(width = event.setting.widthCount, height = event.setting.heightCount)
-                    startTimer(event.setting.timer)
-                } else {
-                    setPause(false)
+                when {
+                    uiState.value.gameEnd -> Unit
+                    !uiState.value.isPlay -> {
+                        startGame(width = event.setting.widthCount, height = event.setting.heightCount)
+                        startTimer(event.setting.timer)
+                    }
+
+                    else -> setPause(false)
                 }
             }
 
             is GameUiEvent.EventReset -> {}
+            is GameUiEvent.RestartGame -> {
+                startGame(width = event.setting.widthCount, height = event.setting.heightCount)
+                startTimer(event.setting.timer)
+            }
         }
     }
 
@@ -103,7 +110,13 @@ class GameViewModel @Inject constructor(
     private fun startGame(width: Int = 5, height: Int = 8) {
         count = 0
         buttonGeneration(width, height)
-        _uiState.value = uiState.value.copy(widthCount = width, heightCount = height, isPlay = true, pauseTimer = "")
+        _uiState.value = uiState.value.copy(
+            widthCount = width,
+            heightCount = height,
+            isPlay = true,
+            pauseTimer = "",
+            gameEnd = false
+        )
     }
 
     private fun buttonGeneration(width: Int? = null, height: Int? = null) {
@@ -146,7 +159,7 @@ class GameViewModel @Inject constructor(
         }
 
         override fun end() {
-            _uiState.value = uiState.value.copy(pauseTimer = "$count", isPlay = false)
+            _uiState.value = uiState.value.copy(pauseTimer = "$count", isPlay = false, gameEnd = true)
         }
     }
 }
