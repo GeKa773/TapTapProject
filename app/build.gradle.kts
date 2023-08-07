@@ -1,3 +1,5 @@
+import org.jetbrains.kotlin.gradle.plugin.mpp.pm20.util.archivesName
+
 plugins {
     id("com.android.application")
     kotlin("android")
@@ -9,13 +11,16 @@ android {
     namespace = "com.gekaradchenko.game.taptapproject"
     compileSdk = 33
 
+    val codeVersion = 1
+    val nameVersion = "1.0.0"
+
     defaultConfig {
         applicationId = "com.gekaradchenko.game.taptapproject"
         minSdk = 24
         targetSdk = 33
-        versionCode = 1
-        versionName = "1.0"
-
+        versionCode = codeVersion
+        versionName = nameVersion
+        setProperty("archivesBaseName", "Tap_Tap_Project_$nameVersion")
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         vectorDrawables {
             useSupportLibrary = true
